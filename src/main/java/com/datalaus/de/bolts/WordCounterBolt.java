@@ -18,13 +18,10 @@ import java.util.TreeMap;
 public class WordCounterBolt extends BaseRichBolt {
 
 	private static final long serialVersionUID = 2706047697068872387L;
-	
 	private static final Logger logger = LoggerFactory.getLogger(WordCounterBolt.class);
 
     private final long logIntervalSec;
-
     private final long clearIntervalSec;
-    
 
     private final int topListSize;
 
