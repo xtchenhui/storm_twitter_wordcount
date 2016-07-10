@@ -30,6 +30,7 @@ public class Topology implements Serializable {
 
 			TopologyBuilder topologyBuilder = new TopologyBuilder();
 			topologyBuilder.setSpout("twitterspout", new TwitterSpout(),1);
+			//
 			topologyBuilder.setBolt("WordSplitterBolt", new WordSplitterBolt(5)).shuffleGrouping("twitterspout");
 			topologyBuilder.setBolt("WordCounterBolt", new WordCounterBolt(10, 5 * 60, 50)).shuffleGrouping("WordSplitterBolt");
 			
@@ -48,7 +49,7 @@ public class Topology implements Serializable {
 				localCluster.killTopology(TOPOLOGY_NAME);
 				localCluster.shutdown();
 			}
-		} catch (final AlreadyAliveException | InvalidTopologyException exception) {
+		} catch (final InvalidTopologyException exception) {
 			exception.printStackTrace();
 		} catch (final Exception exception) {
 			exception.printStackTrace();
