@@ -33,7 +33,6 @@ public class TwitterSpout extends BaseRichSpout {
 	LinkedBlockingQueue<Status> statusqueue = new LinkedBlockingQueue<Status>();
 	TwitterStream twitterStream;
 	
-	@Override
 	public void open(@SuppressWarnings("rawtypes") Map conf, TopologyContext context,SpoutOutputCollector collector) {
 		// TODO Auto-generated method stub
 		coll=collector;
@@ -62,20 +61,18 @@ public class TwitterSpout extends BaseRichSpout {
 		
 		StatusListener listener = new StatusListener(){
 
-			@Override
 			public void onStatus(Status arg0) {
 				statusqueue.offer(arg0);
 			}
 			//Irrelevant Functions
-			@Override
 			public void onException(Exception arg0) {}
-			@Override
+			
 			public void onDeletionNotice(StatusDeletionNotice arg0) {}
-			@Override
+		
 			public void onScrubGeo(long arg0, long arg1) {}
-			@Override
+			
 			public void onStallWarning(StallWarning arg0) {}
-			@Override
+		
 			public void onTrackLimitationNotice(int arg0) {}
 			
 		};
@@ -93,7 +90,7 @@ public class TwitterSpout extends BaseRichSpout {
 
 	}
 
-	@Override
+	
 	public void nextTuple() {
 		// TODO Auto-generated method stub
 		Status tempst = statusqueue.poll();
@@ -103,7 +100,7 @@ public class TwitterSpout extends BaseRichSpout {
 			coll.emit(new Values(tempst));
 	}
 
-	@Override
+
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		// TODO Auto-generated method stub
 		declarer.declare(new Fields("tweet"));

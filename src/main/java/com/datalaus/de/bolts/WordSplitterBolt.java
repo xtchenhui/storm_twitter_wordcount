@@ -24,12 +24,12 @@ public class WordSplitterBolt extends BaseRichBolt {
         this.minWordLength = minWordLength;
     }
 
-    @Override
+ 
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector collector) {
         this.collector = collector;
     }
 
-    @Override
+  
     public void execute(Tuple input) {
         Status tweet = (Status) input.getValueByField("tweet");
         String lang = tweet.getUser().getLang();
@@ -42,7 +42,7 @@ public class WordSplitterBolt extends BaseRichBolt {
         }
     }
 
-    @Override
+ 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("lang", "word"));
     }

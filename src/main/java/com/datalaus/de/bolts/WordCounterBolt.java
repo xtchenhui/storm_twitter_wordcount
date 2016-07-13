@@ -5,7 +5,10 @@ import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;
+import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
+import backtype.storm.tuple.Values;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +31,8 @@ public class WordCounterBolt extends BaseRichBolt {
     private Map<String, Long> counter;
     private long lastLogTime;
     private long lastClearTime;
+    
+    private OutputCollector collector;
 
     public WordCounterBolt(long logIntervalSec, long clearIntervalSec, int topListSize) {
         this.logIntervalSec = logIntervalSec;
@@ -35,24 +40,27 @@ public class WordCounterBolt extends BaseRichBolt {
         this.topListSize = topListSize;
     }
 
-    @Override
+
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector collector) {
         counter = new HashMap<String, Long>();
         lastLogTime = System.currentTimeMillis();
         lastClearTime = System.currentTimeMillis();
+        this.collector = collector;
     }
 
-    @Override
+  
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
+    	outputFieldsDeclarer.declare(new Fields("word", "count"));
     }
 
-    @Override
+
     public void execute(Tuple input) {
         String word = (String) input.getValueByField("word");
         Long count = counter.get(word);
         count = count == null ? 1L : count + 1;
         counter.put(word, count);
-
+        collector.emit(new Values(word, count));
+        
         long now = System.currentTimeMillis();
         long logPeriodSec = (now - lastLogTime) / 1000;
         if (logPeriodSec > logIntervalSec) {
