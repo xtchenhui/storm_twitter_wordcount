@@ -40,6 +40,11 @@ public class Topology implements Serializable {
 	
 	public static final void main(final String[] args) {
 		try {
+			//start a tweetskafka producer first
+			//you need provide the user id you want to follow and kafka server to store the data
+			TweetsKafkaProducer tkProducer = new TweetsKafkaProducer(739682825863995393L,"127.0.0.1:9092");
+			tkProducer.start();
+			
 			Properties topologyConfig = null;
 			final Config config = new Config();
 			config.setMessageTimeoutSecs(20);
