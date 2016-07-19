@@ -47,7 +47,7 @@ public class TweetsKafkaProducer extends Thread {
 		props.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaserver);
 		props.setProperty(ProducerConfig.METADATA_FETCH_TIMEOUT_CONFIG, Integer.toString(5 * 1000));
 		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, Status.class.getName());
+		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		producer = new KafkaProducer(props);
 		
 		//Configuring Twitter OAuth
@@ -64,7 +64,7 @@ public class TweetsKafkaProducer extends Thread {
 		listener = new StatusListener(){
 
 			public void onStatus(Status arg0) {
-				ProducerRecord<String, Status> data = new ProducerRecord("tweets", arg0);
+				ProducerRecord<String, String> data = new ProducerRecord("tweets", arg0.getText());
 				producer.send(data);
 			}
 			//Irrelevant Functions

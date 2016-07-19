@@ -40,20 +40,23 @@ public class Topology implements Serializable {
 	
 	public static final void main(final String[] args) {
 		try {
+			String configFileLocation = "config.properties";
+			Properties topologyConfig = new Properties();
+		    topologyConfig.load(ClassLoader.getSystemResourceAsStream(configFileLocation));
+			
+		    String kafkaserver = topologyConfig.getProperty("kafkaserver");
 			//start a tweetskafka producer first
 			//you need provide the user id you want to follow and kafka server to store the data
-			TweetsKafkaProducer tkProducer = new TweetsKafkaProducer(739682825863995393L,"127.0.0.1:9092");
+			TweetsKafkaProducer tkProducer = new TweetsKafkaProducer(739682825863995393L,kafkaserver);
 			tkProducer.start();
 			
-			Properties topologyConfig = null;
+			 
 			final Config config = new Config();
 			config.setMessageTimeoutSecs(20);
 
 			TopologyBuilder topologyBuilder = new TopologyBuilder();
 			
-			String configFileLocation = "config.properties";
-		    topologyConfig = new Properties();
-		    topologyConfig.load(ClassLoader.getSystemResourceAsStream(configFileLocation));
+
 		    String zkConnString = topologyConfig.getProperty("zookeeper");
 		    String topicName = topologyConfig.getProperty("topic");
 			BrokerHosts hosts = new ZkHosts(zkConnString);
